@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use gnn_pr_solver in your research, please cite it using these metadata."
+title: gnn_pr_solver
+abstract: "gnn_pr_solver is a prototypical incomplete solver for parity games based that uses graph neural networks"
+authors:
+  - family-names: Hecking
+    given-names: Tobias
+    affiliation: "German Aerospace Center (DLR)"
+    orcid: "https://orcid.org/0000-0003-0833-7989"
+license: MIT
+repository-code: "https://github.com/DLR-SC/gnn_pr_solver"
