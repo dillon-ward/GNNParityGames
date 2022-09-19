@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 German Aerospace Center (DLR)
+#
+# SPDX-License-Identifier: MIT
+ 
 import torch
 from torch_geometric.data import InMemoryDataset, Data
 import numpy as np

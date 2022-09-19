@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 German Aerospace Center (DLR)
+#
+# SPDX-License-Identifier: MIT
+
 import torch
 #from torch_geometric.nn.models import GCN
 from torch_geometric.nn.models import GAT

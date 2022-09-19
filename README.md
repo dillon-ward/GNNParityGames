@@ -1,3 +1,15 @@
+<!---
+SPDX-FileCopyrightText: 2022 German Aerospace Center (DLR)
+
+SPDX-License-Identifier: CC-BY-NC-ND-3.0
+-->
+
+<p align="center">
+  <a href="https://github.com/dlr-sc/gitlab2prov/blob/master/LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow.svg" target="_blank" />
+  </a>
+</p>
+
 # gnn_pr_solver
 
 ## Create games and solutions
