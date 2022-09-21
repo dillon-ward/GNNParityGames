@@ -1,0 +1,21 @@
+variables:
+  DOCKER_AUTH_CONFIG: '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERAUTH" } }}'
+
+stages:
+  - check
+
+reuse-compliance:
+  stage: check
+  image: fsfe/reuse:1.0.0
+  tags:
+    - docker
+  script:
+    - reuse lint
+
+cff-compliance:
+  stage: check
+  image: citationcff/cffconvert:2.0.0
+  tags:
+    - docker
+  script:
+    - cffconvert --validate
