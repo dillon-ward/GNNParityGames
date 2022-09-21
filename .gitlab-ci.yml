@@ -8,7 +8,7 @@ reuse-compliance:
   stage: check
   image:
     name: fsfe/reuse:1.0.0
-    entrypoint: ["/bin/sh"]
+    entrypoint: [""] # workaround, cf. https://gitlab.com/gitlab-org/gitlab-runner/-/issues/2692
   tags:
     - docker
   script:
@@ -18,7 +18,7 @@ cff-compliance:
   stage: check
   image:
     name: citationcff/cffconvert:2.0.0
-    entrypoint: ["/bin/sh"]
+    entrypoint: [""] # workaround, cf. https://gitlab.com/gitlab-org/gitlab-runner/-/issues/2692
   tags:
     - docker
   script:
