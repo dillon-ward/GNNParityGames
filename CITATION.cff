@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 German Aerospace Center (DLR)
+#
+# SPDX-License-Identifier: CC-BY-NC-ND-3.0
+
 cff-version: 1.2.0
 message: "If you use gnn_pr_solver in your research, please cite it using these metadata."
 title: gnn_pr_solver
