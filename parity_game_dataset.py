@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2022 German Aerospace Center (DLR)
+# SPDX-FileContributor: Tobias Hecking <tobias.hecking@dlr.de>
 #
 # SPDX-License-Identifier: MIT
  

@@ -1,5 +1,7 @@
 <!---
 SPDX-FileCopyrightText: 2022 German Aerospace Center (DLR)
+SPDX-FileContributor: Tobias Hecking <tobias.hecking@dlr.de>
+SPDX-FileContributor: Alexander Weinert <alexander.weinert@dlr.de>
 
 SPDX-License-Identifier: CC-BY-NC-ND-3.0
 -->
