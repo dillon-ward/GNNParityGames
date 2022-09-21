@@ -6,7 +6,9 @@ stages:
 
 reuse-compliance:
   stage: check
-  image: fsfe/reuse:1.0.0
+  image:
+    name: fsfe/reuse:1.0.0
+    entrypoint: ["/bin/sh"]
   tags:
     - docker
   script:
@@ -14,7 +16,9 @@ reuse-compliance:
 
 cff-compliance:
   stage: check
-  image: citationcff/cffconvert:2.0.0
+  image:
+    name: citationcff/cffconvert:2.0.0
+    entrypoint: ["/bin/sh"]
   tags:
     - docker
   script:
