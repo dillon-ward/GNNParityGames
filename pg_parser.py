@@ -56,3 +56,20 @@ def parse_solution(solution_lines, found_regions_p0=None, found_strategies_p0=No
 def get_solution(solution_file):
     with open(solution_file) as f:
         return parse_solution(f.readlines())
+    
+def get_solution_short_form(solution_file):
+    with open(solution_file) as f:
+        return parse_solution_short_form(f.readlines()[1:], [], []) # Skip the first line, as it is a fairly useless header
+    
+def parse_solution_short_form(lines, region_0_acc, region_1_acc):
+    if len(lines) == 0:
+        return region_0_acc, region_1_acc
+    
+    parts = lines[0].split(" ")
+    node, winner = parts[0], 0 if parts[1] == "0" else 1
+    if winner == 0:
+        region_0_acc.append(int(node))
+    else:
+        region_1_acc.append(int(node))
+    
+    return parse_solution_short_form(lines[1:], region_0_acc, region_1_acc)

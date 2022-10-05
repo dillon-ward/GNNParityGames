@@ -1,4 +1,4 @@
-<!---
+<!--
 SPDX-FileCopyrightText: 2022 German Aerospace Center (DLR)
 SPDX-FileContributor: Tobias Hecking <tobias.hecking@dlr.de>
 SPDX-FileContributor: Alexander Weinert <alexander.weinert@dlr.de>
@@ -20,11 +20,15 @@ SPDX-License-Identifier: CC-BY-NC-ND-3.0
 
 # gnn_pr_solver
 
+## Requirements
+
+    pip install --user torch torch_sparse torch-geometric torch-scatter wandb
+
 ## Create games and solutions
 
 **Run:** 
 
-python game_generator.py -n NUM_GAMES -gdir GAMES_DIR -sdir SOLUTIONS_DIR -pg PGSOLVER_BASE [-minn MIN_NODES]
+    python game_generator.py -n NUM_GAMES -gdir GAMES_DIR -sdir SOLUTIONS_DIR -pg PGSOLVER_BASE [-minn MIN_NODES]
                              [-maxn MAX_NODES] [-minrod MIN_ROD] [-maxrod MAX_ROD]
 
 - -n: number of games
@@ -38,4 +42,5 @@ python game_generator.py -n NUM_GAMES -gdir GAMES_DIR -sdir SOLUTIONS_DIR -pg PG
 
 ## Train models 
 
-See Jupyter notebook for examples.
+    for i in {games/game_1.txt,solutions/solution_game_1.txt}; do cat $i; echo ---; done | ./gnn-pg-solver.py train --network GAT > weights.ipt
+
