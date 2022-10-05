@@ -171,14 +171,62 @@ def predict(args):
 
     predictor.predict(args.files)
 
-def evaluate(args):
-    if args.results is None:
-        input = sys.stdin.readlines()
-    else:
-        with open(args.results, 'r') as f:
-            input = f.readlines()
+class Evaluator:
 
-    print(input)
+    def __init__(self):
+        self._statistics = []
+
+    def evaluate(self, inputs):
+        if isinstance(self._output, str):
+            with open(self._output, 'w') as f:
+                for line in inputs:
+                    split_line = line.rstrip().split(' ')
+                    self._evaluate(split_line[0], split_line[-1], split_line[1:-1], f)
+        else:
+            for line in inputs:
+                split_line = line.rstrip().split(' ')
+                self._evaluate(split_line[0], split_line[-1], split_line[1:-1], sys.stdout)
+
+    def _evaluate(self, game, reference, prediction, output):
+        pred_region_0 = [int(node) for node in prediction]
+
+        act_region_0, _, act_region_1, _ = parser.get_solution(reference)
+
+        correct_in_region_0, wrong_in_region_0 = compare_regions(pred_region_0, act_region_0)
+
+        num_nodes = len(act_region_0) + len(act_region_1)
+        self._statistics.append((num_nodes, correct_in_region_0))
+
+        if not len(act_region_0) == 0:
+            percentage_wrong = wrong_in_region_0 * 1.0 / len(act_region_0)
+        else:
+            percentage_wrong = 0.0
+
+        output_line = " ".join([game, str(len(act_region_0)), str(correct_in_region_0), str(wrong_in_region_0), str(percentage_wrong)]) + "\n"
+        output.write(output_line)
+
+    @property
+    def output(self):
+        return self._output
+
+    @output.setter
+    def output(self, value):
+        self._output = value
+
+def evaluate(args):
+    evaluator = Evaluator()
+    evaluator.output = args.output
+    evaluator.evaluate(sys.stdin)
+
+def compare_regions(pred, act):
+    correct, wrong = 0, 0
+    for pred_vertex in pred:
+        if pred_vertex in act:
+            correct += 1
+        else:
+            wrong += 1
+
+    return correct, wrong
 
 def main():
     parser = argparse.ArgumentParser()
@@ -197,7 +245,7 @@ def main():
     predict_parser.set_defaults(func=predict)
 
     evaluate_parser = subparsers.add_parser('evaluate', help='evaluate the results of a prediction against a reference solution')
-    evaluate_parser.add_argument('-r', '--results', type=str, help="The file containing a space-separated results file. If not provided, results are read from stdin.")
+    evaluate_parser.add_argument('-o', '--output', type=str, help="Where to write the output file. If - or omitted, output is written to stdout")
     evaluate_parser.set_defaults(func=evaluate)
 
     args = parser.parse_args()

@@ -55,8 +55,18 @@ or its equivalent using shorthand options
 We assume that the directory `games` contains a set of plain-text files containing parity games.
 Use
 
-    ./gnn-pg-solver.py predict --network GAT --weights GAT_weights.pth games/*
+    ./gnn-pg-solver.py predict --network GAT --weights GAT_weights.pth --output results.csv games/*
 
 or its equivalent using shorthand options
 
-    ./gnn-pg-solver.py predict -n GAT -w GAT_weights.pth games/*
+    ./gnn-pg-solver.py predict -n GAT -w GAT_weights.pth -o results.csv games/*
+
+## Evaluate predictions
+
+First, generate some predictions using the command in the previous section.
+We assume that for each game `games/game_XXXX.txt` there exists a solution `solutions/solution_game_XXXX.txt`.
+
+The `evaluate` subcommand expects the input to be in the form `game prediction reference`, so we need to add the final column to the results before handing them to the evaluation.
+
+    sed 's:^games/game_\([0-9]*\).txt.*$:solutions/solution_game_\1.txt:' < results.csv > solutions.csv
+    paste -d' ' results.csv solutions.csv | ./gnn-pg-solver evaluate 
