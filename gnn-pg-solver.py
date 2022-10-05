@@ -128,8 +128,6 @@ def train(args):
 
     training.train(games, solutions)
 
-    print("Training")
-
 def solve(args):
     Solver()
     print("Solving")
