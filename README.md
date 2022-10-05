@@ -42,5 +42,21 @@ SPDX-License-Identifier: CC-BY-NC-ND-3.0
 
 ## Train models 
 
-    for i in {games/game_1.txt,solutions/solution_game_1.txt}; do cat $i; echo ---; done | ./gnn-pg-solver.py train --network GAT > weights.ipt
+Use
 
+    ./gnn-pg-solver.py train --network GAT --output GAT_weights.pth games/game_1.txt solutions/soluation_1.txt
+
+or its equivalent using shorthand options
+
+    ./gnn-pg-solver.py train -n GAT -o GAT_weights.pth games/game_1.txt solutions/soluation_1.txt
+
+## Predict winning regions
+
+We assume that the directory `games` contains a set of plain-text files containing parity games.
+Use
+
+    ./gnn-pg-solver.py predict --network GAT --weights GAT_weights.pth games/*
+
+or its equivalent using shorthand options
+
+    ./gnn-pg-solver.py predict -n GAT -w GAT_weights.pth games/*

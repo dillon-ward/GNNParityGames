@@ -28,8 +28,7 @@ class ParityGameDataset(InMemoryDataset):
         return ['data.pt']
 
     def make_graph(self, game, solution):
-        #print('Process game ' + game_file)
-        nodes, edges = parser.parse_game_file(game[1:])
+        nodes, edges = parser.parse_game_file(game)
         regions_0, strategy_0, regions_1, strategy_1 = parser.parse_solution(solution)
         
         y_nodes = torch.zeros(nodes.shape[0], dtype=torch.long)
@@ -41,7 +40,7 @@ class ParityGameDataset(InMemoryDataset):
         y_edges[index_0] = 1
         y_edges[index_1] = 1
         
-        return Data(x=torch.tensor(nodes, dtype=torch.float), edge_index=torch.tensor(edges, dtype=torch.long).t().contiguous(), y_nodes=y_nodes, y_edges=y_edges, filename=game_file)
+        return Data(x=torch.tensor(nodes, dtype=torch.float), edge_index=torch.tensor(edges, dtype=torch.long).t().contiguous(), y_nodes=y_nodes, y_edges=y_edges)
 
     def process(self):
         # Read data into huge `Data` list.
