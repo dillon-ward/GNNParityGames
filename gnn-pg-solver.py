@@ -175,19 +175,23 @@ class Evaluator:
 
     def __init__(self):
         self._statistics = []
+        self.histogram = False
 
     def evaluate(self, inputs):
         if isinstance(self._output, str):
             with open(self._output, 'w') as f:
-                for line in inputs:
-                    split_line = line.rstrip().split(' ')
-                    self._evaluate(split_line[0], split_line[-1], split_line[1:-1], f)
+                self._evaluate(inputs, output)
         else:
-            for line in inputs:
-                split_line = line.rstrip().split(' ')
-                self._evaluate(split_line[0], split_line[-1], split_line[1:-1], sys.stdout)
+            self._evaluate(inputs, sys.stdout)
 
-    def _evaluate(self, game, reference, prediction, output):
+    def _evaluate(self, inputs, output):
+        for line in inputs:
+            split_line = line.rstrip().split(' ')
+            self._evaluate_single(split_line[0], split_line[-1], split_line[1:-1], output)
+        if self.histogram:
+            self._print_histogram(output)
+
+    def _evaluate_single(self, game, reference, prediction, output):
         pred_region_0 = [int(node) for node in prediction]
 
         act_region_0, _, act_region_1, _ = parser.get_solution(reference)
@@ -195,7 +199,7 @@ class Evaluator:
         correct_in_region_0, wrong_in_region_0 = compare_regions(pred_region_0, act_region_0)
 
         num_nodes = len(act_region_0) + len(act_region_1)
-        self._statistics.append((num_nodes, correct_in_region_0))
+        self._statistics.append((num_nodes, correct_in_region_0, wrong_in_region_0))
 
         if not len(act_region_0) == 0:
             percentage_wrong = wrong_in_region_0 * 1.0 / len(act_region_0)
@@ -205,6 +209,11 @@ class Evaluator:
         output_line = " ".join([game, str(len(act_region_0)), str(correct_in_region_0), str(wrong_in_region_0), str(percentage_wrong)]) + "\n"
         output.write(output_line)
 
+    def _print_histogram(self, output):
+        max_wrong = max(map(lambda x: x[2], self._statistics))
+        for num_wrong in range(0, max_wrong + 1):
+            output.write(f"{num_wrong} {len(list(filter(lambda x: x[2] == num_wrong, self._statistics)))}\n")
+
     @property
     def output(self):
         return self._output
@@ -213,9 +222,19 @@ class Evaluator:
     def output(self, value):
         self._output = value
 
+
+    @property
+    def histogram(self):
+        return self._histogram
+
+    @histogram.setter
+    def histogram(self, value):
+        self._histogram = value
+
 def evaluate(args):
     evaluator = Evaluator()
     evaluator.output = args.output
+    evaluator.histogram = args.histogram
     evaluator.evaluate(sys.stdin)
 
 def compare_regions(pred, act):
@@ -246,6 +265,7 @@ def main():
 
     evaluate_parser = subparsers.add_parser('evaluate', help='evaluate the results of a prediction against a reference solution')
     evaluate_parser.add_argument('-o', '--output', type=str, help="Where to write the output file. If - or omitted, output is written to stdout")
+    evaluate_parser.add_argument('--histogram', action='store_true', help="If set, histogram of wrongly predicted vertices will be printed after evaluation")
     evaluate_parser.set_defaults(func=evaluate)
 
     args = parser.parse_args()
