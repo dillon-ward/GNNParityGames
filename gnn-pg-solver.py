@@ -171,6 +171,15 @@ def predict(args):
 
     predictor.predict(args.files)
 
+def evaluate(args):
+    if args.results is None:
+        input = sys.stdin.readlines()
+    else:
+        with open(args.results, 'r') as f:
+            input = f.readlines()
+
+    print(input)
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help='sub-command help', required=True)
@@ -186,6 +195,10 @@ def main():
     predict_parser.add_argument('-o', '--output', type=str, help="Where to write the output file. If - or omitted, output is written to stdout")
     predict_parser.add_argument('files', nargs='*', help="A list of files containing games for which to predict winning regions.")
     predict_parser.set_defaults(func=predict)
+
+    evaluate_parser = subparsers.add_parser('evaluate', help='evaluate the results of a prediction against a reference solution')
+    evaluate_parser.add_argument('-r', '--results', type=str, help="The file containing a space-separated results file. If not provided, results are read from stdin.")
+    evaluate_parser.set_defaults(func=evaluate)
 
     args = parser.parse_args()
     args.func(args)
