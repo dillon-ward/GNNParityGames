@@ -6,17 +6,9 @@ SPDX-FileContributor: Alexander Weinert <alexander.weinert@dlr.de>
 SPDX-License-Identifier: CC-BY-NC-ND-3.0
 -->
 
-<p align="center">
-  <a href="https://github.com/dlr-sc/gitlab2prov/blob/master/LICENSE">
-    <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow.svg" target="_blank" />
-  </a>
-  <a href="https://citation-file-format.github.io/">
-    <img alt="Badge: REUSE compliant" src="https://img.shields.io/reuse/compliance/github.com/DLR-SC/GNN-Parity-Games-Solver" target="_blank" />
-  </a>
-  <a href="https://citation-file-format.github.io/">
-    <img alt="Badge: Citation File Format Inside" src="https://img.shields.io/badge/-citable%20software-green" target="_blank" />
-  </a>
-</p>
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://github.com/DLR-SC/GNN-Parity-Games-Solver/blob/main/LICENSES/MIT.txt)
+[![REUSE status](https://api.reuse.software/badge/github.com/DLR-SC/GNN-Parity-Games-Solver)](https://api.reuse.software/info/github.com/DLR-SC/GNN-Parity-Games-Solver)
+[![Badge: Citation File Format Inside](https://img.shields.io/badge/-citable%20software-green)](https://github.com/DLR-SC/GNN-Parity-Games-Solver/blob/main/CITATION.cff)
 
 # gnn_pr_solver
 
