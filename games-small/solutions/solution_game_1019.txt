@@ -1,0 +1,16 @@
+PGSolver Collection Ver. 4.0: Parity Game Solver
+Authors: Oliver Friedmann (University of Munich) and Martin Lange (University of Kassel), 2008-2017
+http://tcsprojects.org
+
+Parsing ............................... 0.00 sec
+Chosen solver `recursive' ............. 0.00 sec
+
+Player 0 wins from nodes:
+  {14, 13, 11, 10, 9, 7, 6, 5, 4, 3, 2, 1, 0}
+with strategy
+  [1->3,2->14,3->10,4->10,5->9,6->1,9->9,10->10,13->7,14->9]
+
+Player 1 wins from nodes:
+  {12, 8}
+with strategy
+  [8->12,12->12]

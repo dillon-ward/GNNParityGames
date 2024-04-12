@@ -1,0 +1,9 @@
+.venv
+__pycache__
+games-large
+pg_data_20220708
+GAT
+GCN
+GIN
+GraphSAGE
+.DS_Store

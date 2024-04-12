@@ -9,9 +9,9 @@
 import argparse
 from torch_geometric.loader import DataLoader
 from parity_game_dataset import ParityGameDataset
-from parity_game_network import ParityGameGCNNetwork, ParityGameGATNetwork
+from parity_game_network import ParityGameGCNNetwork, ParityGameGraphSAGENetwork, ParityGameGINNetwork, ParityGameGATNetwork
 import pg_parser as parser
-import math
+import time
 import torch
 import numpy as np
 import sys
@@ -91,6 +91,10 @@ def train(args):
         training.network = ParityGameGATNetwork(256, 256, 10)
     elif args.network == "GCN":
         training.network = ParityGameGCNNetwork(256, 256, 10)
+    elif args.network == "GraphSAGE":
+        training.network = ParityGameGraphSAGENetwork(256, 256, 10)
+    elif args.network == "GIN":
+        training.network = ParityGameGINNetwork(256, 256, 10)
 
     training.output = args.output
 
@@ -161,6 +165,10 @@ def predict(args):
         predictor.network = ParityGameGATNetwork(256, 256, 10)
     elif args.network == "GCN":
         predictor.network = ParityGameGCNNetwork(256, 256, 10)
+    elif args.network == "GraphSAGE":
+        predictor.network = ParityGameGraphSAGENetwork(256, 256, 10)
+    elif args.network == "GIN":
+        predictor.network = ParityGameGINNetwork(256, 256, 10)
 
     predictor.weights = args.weights
 
@@ -180,7 +188,7 @@ class Evaluator:
     def evaluate(self, inputs):
         if isinstance(self._output, str):
             with open(self._output, 'w') as f:
-                self._evaluate(inputs, output)
+                self._evaluate(inputs, f)
         else:
             self._evaluate(inputs, sys.stdout)
 
@@ -188,31 +196,33 @@ class Evaluator:
         for line in inputs:
             split_line = line.rstrip().split(' ')
             self._evaluate_single(split_line[0], split_line[-1], split_line[1:-1], output)
+        percentage_right = sum(map(lambda x: x[1], self._statistics)) / sum(map(lambda x: x[0], self._statistics))
+        output.write(f"\nAcc. {percentage_right}\n\n") 
         if self.histogram:
             self._print_histogram(output)
 
     def _evaluate_single(self, game, reference, prediction, output):
-        pred_region_0 = [int(node) for node in prediction]
+        pred_region_0 = [int(node) for node in prediction] if prediction[0] != '' else []
 
         act_region_0, _, act_region_1, _ = parser.get_solution(reference)
 
         correct_in_region_0, wrong_in_region_0 = compare_regions(pred_region_0, act_region_0)
 
-        num_nodes = len(act_region_0) + len(act_region_1)
-        self._statistics.append((num_nodes, correct_in_region_0, wrong_in_region_0))
+        self._statistics.append((len(act_region_0), correct_in_region_0, wrong_in_region_0))
 
         if not len(act_region_0) == 0:
             percentage_wrong = wrong_in_region_0 * 1.0 / len(act_region_0)
         else:
             percentage_wrong = 0.0
 
-        output_line = " ".join([game, str(len(act_region_0)), str(correct_in_region_0), str(wrong_in_region_0), str(percentage_wrong)]) + "\n"
+        output_line = " ".join([game, str(len(act_region_0)), str(correct_in_region_0), str(wrong_in_region_0), str(percentage_wrong * 100)]) + "\n"
         output.write(output_line)
 
     def _print_histogram(self, output):
         max_wrong = max(map(lambda x: x[2], self._statistics))
         for num_wrong in range(0, max_wrong + 1):
-            output.write(f"{num_wrong} {len(list(filter(lambda x: x[2] == num_wrong, self._statistics)))}\n")
+            wrong_list = list(filter(lambda x: x[2] == num_wrong, self._statistics))
+            output.write(f"{num_wrong} {len(wrong_list)}\n")
 
     @property
     def output(self):
@@ -221,7 +231,6 @@ class Evaluator:
     @output.setter
     def output(self, value):
         self._output = value
-
 
     @property
     def histogram(self):
@@ -251,13 +260,13 @@ def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help='sub-command help', required=True)
     train_parser = subparsers.add_parser('train', help='create a weights-file by training the solver on a set of solved games')
-    train_parser.add_argument('-n', '--network', type=str, choices=['GCN','GAT'], required=True, help="The GNN architecture to train")
+    train_parser.add_argument('-n', '--network', type=str, choices=['GCN', 'GraphSAGE', 'GIN','GAT'], required=True, help="The GNN architecture to train")
     train_parser.add_argument('-o', '--output', type=str, required=True, help="Where to write the output weights-file")
     train_parser.add_argument('files', nargs='*', help="A list of files containing games and solutions for training. Must alternate between games and solutions, starting with games.")
     train_parser.set_defaults(func=train)
 
     predict_parser = subparsers.add_parser('predict', help='predict winning regions of one or more parity games using a previously created weights-file')
-    predict_parser.add_argument('-n', '--network', type=str, choices=['GCN','GAT'], required=True, help="The GNN architecture to train")
+    predict_parser.add_argument('-n', '--network', type=str, choices=['GCN', 'GraphSAGE', 'GIN','GAT'], required=True, help="The GNN architecture to train")
     predict_parser.add_argument('-w', '--weights', type=str, required=True, help="A weights-file produced by the train sub-command")
     predict_parser.add_argument('-o', '--output', type=str, help="Where to write the output file. If - or omitted, output is written to stdout")
     predict_parser.add_argument('files', nargs='*', help="A list of files containing games for which to predict winning regions.")
@@ -269,7 +278,9 @@ def main():
     evaluate_parser.set_defaults(func=evaluate)
 
     args = parser.parse_args()
+    start_time = time.time()
     args.func(args)
+    print(time.time() - start_time)
 
 if __name__ == "__main__":
     main()

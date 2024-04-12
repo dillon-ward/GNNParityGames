@@ -14,17 +14,17 @@ SPDX-License-Identifier: CC-BY-NC-ND-3.0
 
 ## Requirements
 
-    pip install --user torch torch_sparse torch-geometric torch-scatter
+    pip install --user torch torch-geometric
 
-## Train models 
+## Train models
 
 Use
 
-    ./gnn-pg-solver.py train --network GAT --output GAT_weights.pth games/game_1.txt solutions/soluation_1.txt
+    ./gnn-pg-solver.py train --network GAT --output GAT_weights.pth games/game_1.txt solutions/solution_1.txt
 
 or its equivalent using shorthand options
 
-    ./gnn-pg-solver.py train -n GAT -o GAT_weights.pth games/game_1.txt solutions/soluation_1.txt
+    ./gnn-pg-solver.py train -n GAT -o GAT_weights.pth games/game_1.txt solutions/solution_1.txt
 
 ## Predict winning regions
 

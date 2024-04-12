@@ -7,12 +7,12 @@ import re
 import numpy as np
     
 def parse_edges(node_line):
-    return np.array(list(np.broadcast([node_line[0]], node_line[3].split(',')))).astype(np.int)
+    return np.array(list(np.broadcast([node_line[0]], node_line[3].split(',')))).astype(int)
 
 def parse_game_file(node_lines):
     return (
         np.append(
-            np.expand_dims(node_lines[:,1].astype(np.float) / np.max(node_lines[:,1].astype(np.float)), axis=1),
+            np.expand_dims(node_lines[:,1].astype(float) / np.max(node_lines[:,1].astype(float)), axis=1),
             [[1, 0] if node[2] == '0' else [0, 1] for node in node_lines], axis=1
         ), 
         np.concatenate([parse_edges(line) for line in node_lines])
