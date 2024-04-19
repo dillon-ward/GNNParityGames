@@ -9,14 +9,12 @@
 import argparse
 from torch_geometric.loader import DataLoader
 from parity_game_dataset import ParityGameDataset
-from parity_game_network import ParityGameGCNNetwork, ParityGameGraphSAGENetwork, ParityGameGINNetwork, ParityGameGATNetwork
+from parity_game_network import ParityGameNetwork
 import pg_parser as parser
 import time
 import torch
 import numpy as np
 import sys
-
-import parity_game_network as pn
 
 class Training:
 
@@ -86,16 +84,7 @@ class Training:
 
 def train(args):
     training = Training()
-
-    if args.network == "GAT":
-        training.network = ParityGameGATNetwork(256, 256, 10)
-    elif args.network == "GCN":
-        training.network = ParityGameGCNNetwork(256, 256, 10)
-    elif args.network == "GraphSAGE":
-        training.network = ParityGameGraphSAGENetwork(256, 256, 10)
-    elif args.network == "GIN":
-        training.network = ParityGameGINNetwork(256, 256, 10)
-
+    training.network = ParityGameNetwork(args.network, 256, 256, 10)
     training.output = args.output
 
     if not len(args.files) % 2 == 0:
@@ -160,16 +149,7 @@ class Predictor:
 
 def predict(args):
     predictor = Predictor()
-
-    if args.network == "GAT":
-        predictor.network = ParityGameGATNetwork(256, 256, 10)
-    elif args.network == "GCN":
-        predictor.network = ParityGameGCNNetwork(256, 256, 10)
-    elif args.network == "GraphSAGE":
-        predictor.network = ParityGameGraphSAGENetwork(256, 256, 10)
-    elif args.network == "GIN":
-        predictor.network = ParityGameGINNetwork(256, 256, 10)
-
+    predictor.network = ParityGameNetwork(args.network, 256, 256, 10)
     predictor.weights = args.weights
 
     if args.output is None or args.output == '-':
