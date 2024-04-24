@@ -14,7 +14,10 @@ set="$1"
 shift
 
 if [ "$set" == "" ]; then
-    echo "no set specified"
+    echo "no result set specified"
+    exit 1
+elif [ "$set" != "train" ] && [ "$set" != "test" ]; then
+    echo "invalid result set"
     exit 1
 fi
 

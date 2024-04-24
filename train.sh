@@ -22,6 +22,9 @@ for i in $(seq -w 0 2099)
 do
     echo "g/game_$i.txt"
     echo "s/solution_game_$i.txt"
-done | xargs python gnn-pg-solver.py train -n "$model" -o "$weights_file"
+done | xargs python gnn-pg-solver.py train -n "$model" -o "$weights_file" || {
+    rm -rf g s "$model" 2>/dev/null
+    exit 1
+}
 
 rm g s 2>/dev/null

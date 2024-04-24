@@ -10,16 +10,22 @@ fi
  
 weights_file=${model}/weights.pth
 
-FIRST=0
-LAST=2099
-
 set="$1"
 shift
 
-if [ "$set" = "test" ] 
-then
+# set to sequence of training data by default
+FIRST=0
+LAST=2099
+
+if [ "$set" == "" ]; then
+    echo "no dataset specified"
+    exit 1
+elif [ "$set" == "test" ]; then
     FIRST=2100
     LAST=2999
+elif [ "$set" != "train" ]; then
+    echo "invalid dataset"
+    exit 1
 fi
 
 results_file=${model}/${set}_results.txt
