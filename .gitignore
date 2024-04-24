@@ -2,6 +2,7 @@
 __pycache__
 games-large
 pg_data_20220708
+EdgeCNN
 GAT
 GCN
 GIN

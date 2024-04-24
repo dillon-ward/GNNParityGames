@@ -9,6 +9,7 @@ from torch_geometric.nn.models import GCN
 from torch_geometric.nn.models import GraphSAGE
 from torch_geometric.nn.models import GIN
 from torch_geometric.nn.models import GAT
+from torch_geometric.nn.models import EdgeCNN
 
 class ParityGameNetwork(torch.nn.Module):
     def __init__(self, model, hidden_channels_nodes, hidden_channels_edges, core_iterations):
@@ -23,6 +24,8 @@ class ParityGameNetwork(torch.nn.Module):
                 self.core = GIN(3, hidden_channels_nodes, core_iterations, jk='lstm', flow='target_to_source')
             case "GraphSAGE":
                 self.core = GraphSAGE(3, hidden_channels_nodes, core_iterations, jk='lstm', flow='target_to_source')
+            case "EdgeCNN":
+                self.core = EdgeCNN(3, hidden_channels_nodes, core_iterations, jk='lstm', flow='target_to_source')
         
         self.node_classifier = torch.nn.Sequential(
             torch.nn.Linear(hidden_channels_nodes, hidden_channels_nodes),
