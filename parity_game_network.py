@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+# Modified: Dillon Ward (2121498), Swansea University, 2024
+
 import torch
 from torch_geometric.nn.models import GCN
 from torch_geometric.nn.models import GraphSAGE

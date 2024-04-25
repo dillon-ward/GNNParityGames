@@ -8,9 +8,6 @@ import torch
 from torch_geometric.data import InMemoryDataset, Data
 import numpy as np
 import pg_parser as parser
-import os
-
-from typing import Tuple, Iterable
     
 class InvalidDataException(Exception):
     """ Exception if solutions do not match games"""

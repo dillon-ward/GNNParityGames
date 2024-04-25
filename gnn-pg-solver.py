@@ -6,6 +6,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+# Modified: Dillon Ward (2121498), Swansea University, 2024
+
 import argparse
 from torch_geometric.loader import DataLoader
 from parity_game_dataset import ParityGameDataset
@@ -84,7 +86,7 @@ class Training:
 
 def train(args):
     training = Training()
-    training.network = ParityGameNetwork(args.network, 256, 256, 10)
+    training.network = ParityGameNetwork(args.network, 256, 256, 1)
     training.output = args.output
 
     if not len(args.files) % 2 == 0:
@@ -149,7 +151,7 @@ class Predictor:
 
 def predict(args):
     predictor = Predictor()
-    predictor.network = ParityGameNetwork(args.network, 256, 256, 10)
+    predictor.network = ParityGameNetwork(args.network, 256, 256, 1)
     predictor.weights = args.weights
 
     if args.output is None or args.output == '-':
@@ -240,13 +242,13 @@ def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help='sub-command help', required=True)
     train_parser = subparsers.add_parser('train', help='create a weights-file by training the solver on a set of solved games')
-    train_parser.add_argument('-n', '--network', type=str, choices=['GCN', 'GraphSAGE', 'GIN','GAT'], required=True, help="The GNN architecture to train")
+    train_parser.add_argument('-n', '--network', type=str, choices=['GCN', 'GraphSAGE', 'GIN', 'GAT', 'EdgeCNN'], required=True, help="The GNN architecture to train")
     train_parser.add_argument('-o', '--output', type=str, required=True, help="Where to write the output weights-file")
     train_parser.add_argument('files', nargs='*', help="A list of files containing games and solutions for training. Must alternate between games and solutions, starting with games.")
     train_parser.set_defaults(func=train)
 
     predict_parser = subparsers.add_parser('predict', help='predict winning regions of one or more parity games using a previously created weights-file')
-    predict_parser.add_argument('-n', '--network', type=str, choices=['GCN', 'GraphSAGE', 'GIN','GAT'], required=True, help="The GNN architecture to train")
+    predict_parser.add_argument('-n', '--network', type=str, choices=['GCN', 'GraphSAGE', 'GIN', 'GAT', 'EdgeCNN'], required=True, help="The GNN architecture to train")
     predict_parser.add_argument('-w', '--weights', type=str, required=True, help="A weights-file produced by the train sub-command")
     predict_parser.add_argument('-o', '--output', type=str, help="Where to write the output file. If - or omitted, output is written to stdout")
     predict_parser.add_argument('files', nargs='*', help="A list of files containing games for which to predict winning regions.")
@@ -260,7 +262,7 @@ def main():
     args = parser.parse_args()
     start_time = time.time()
     args.func(args)
-    print(time.time() - start_time)
+    print(f"Executed in {time.time() - start_time} seconds")
 
 if __name__ == "__main__":
     main()
